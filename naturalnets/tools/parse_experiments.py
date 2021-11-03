@@ -1,7 +1,5 @@
 import json
-import logging
 import os
-
 
 def read_simulations(base_directory):
     simulation_runs = []
@@ -14,8 +12,8 @@ def read_simulations(base_directory):
 
         with open(os.path.join(simulation_folder, "Log.json"), "r") as read_file:
             log = json.load(read_file)
-
-        sim = {"dir": sub_dir, "conf": conf, "log": log}
+        has_plot = os.path.isfile(os.path.join(simulation_folder, "plot.svg"))
+        sim = {"dir": sub_dir, "conf": conf, "log": log, "has_plot": has_plot}
         simulation_runs.append(sim)
 
     return simulation_runs
@@ -52,3 +50,4 @@ def gather_info_for_csv(simulation):
             "elapsed_time_training [h]": log_info["elapsed_time_training"]/3600,
             "CPU": log_info["cpu"],
             **conf, **brain, **optimizer, **environment}
+

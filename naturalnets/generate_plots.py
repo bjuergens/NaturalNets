@@ -3,7 +3,7 @@ import os
 
 import matplotlib.pyplot as plt
 
-from naturalnets.tools.parse_experiments import read_simulations, parse_log
+from naturalnets.tools.parse_experiments import read_simulations
 
 logging.basicConfig(format="%(levelname)s: %(message)s", level=logging.INFO)
 
@@ -13,9 +13,23 @@ style: str = "seaborn-paper"  # Which plot style should be used?
 recreate_all_plots: bool = False
 
 
+def parse_log(log):
+    # Layout of Log.json is
+    # ['gen', 'min', 'mean', 'max', 'best', 'elapsed time (s)\n']
+    mean = [log_entry["mean"] for log_entry in log]
+    maximum = [log_entry["max"] for log_entry in log]
+    best = [log_entry["best"] for log_entry in log]
+    generations = [i for i in range(len(log))]
+    return {
+        "generations": generations,
+        "mean": mean,
+        "maximum": maximum,
+        "best": best
+    }
+
+
 def plot_chapter(axis, parsed_log):
     colors = ("green", "teal", "teal", 'blue')
-
     generations = parsed_log["generations"]
     mean = parsed_log["mean"]
     maximum = parsed_log["maximum"]
@@ -29,19 +43,14 @@ def plot_chapter(axis, parsed_log):
 all_simulations = read_simulations(simulations_directory)
 
 for simulation in all_simulations:
-    plot = simulation["plot"]
     simulation_dir = simulation["dir"]
-
-    if plot is not None and not recreate_all_plots:
+    if simulation["has_plot"] and not recreate_all_plots:
         continue
-
-    log = parse_log(simulation["log"])
-
-    if log is None:
+    parsed_log = parse_log(simulation["log"])
+    if parsed_log is None:
         continue
 
     config = simulation["conf"]
-
     try:
         params_display = config["environment"]["type"] + "\n" + config["brain"]["type"] + " + " + config["optimizer"][
             "type"].replace('_', ' ')
@@ -53,7 +62,7 @@ for simulation in all_simulations:
     fig, ax1 = plt.subplots()
     plt.style.use(style)
 
-    plot_chapter(ax1, log)
+    plot_chapter(ax1, parsed_log)
 
     ax1.set_xlabel("Generations")
     ax1.set_ylabel("Fitness")
