@@ -32,6 +32,7 @@ def gather_info_for_csv(simulation):
         mean = parsed_log["mean"]
         maximum = parsed_log["maximum"]
         best = parsed_log["best"]
+
     try:
         brain = {"brain." + k: v for k, v in conf["brain"].items()}
         optimizer = {"optimizer." + k: v for k, v in conf["optimizer"].items()}
@@ -53,7 +54,7 @@ def gather_info_for_csv(simulation):
             "max": max(maximum),
             "best": max(best),
             "directory": simulation["dir"],
-            "plot": simulation["plot"],
+            "plot": f"=HYPERLINK(\"{simulation['plot']}\")",
             **conf, **brain, **optimizer, **environment}
 
 

@@ -3,29 +3,14 @@ import os
 
 import matplotlib.pyplot as plt
 
-from naturalnets.tools.parse_experiments import read_simulations
+from naturalnets.tools.parse_experiments import read_simulations, parse_log
 
 logging.basicConfig(format="%(levelname)s: %(message)s", level=logging.INFO)
 
 simulations_directory = "Simulation_Results"
-save_svg: str = "plot.svg"  # A filename where the plot should be saved as png
+save_svg: str = "plot.svg"  # A filename where the plot should be saved
 style: str = "seaborn-paper"  # Which plot style should be used?
 recreate_all_plots: bool = False
-
-
-def parse_log(log):
-    # Layout of Log.json is
-    # ['gen', 'min', 'mean', 'max', 'best', 'elapsed time (s)\n']
-    mean = [log_entry["mean"] for log_entry in log]
-    maximum = [log_entry["max"] for log_entry in log]
-    best = [log_entry["best"] for log_entry in log]
-    generations = [i for i in range(len(log))]
-    return {
-        "generations": generations,
-        "mean": mean,
-        "maximum": maximum,
-        "best": best
-    }
 
 
 def plot_chapter(axis, parsed_log):
@@ -44,7 +29,7 @@ all_simulations = read_simulations(simulations_directory)
 
 for simulation in all_simulations:
     simulation_dir = simulation["dir"]
-    if simulation["has_plot"] and not recreate_all_plots:
+    if simulation["plot"] is not None and not recreate_all_plots:
         continue
     parsed_log = parse_log(simulation["log"])
     if parsed_log is None:
