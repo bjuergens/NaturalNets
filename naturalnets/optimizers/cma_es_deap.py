@@ -11,6 +11,7 @@ class OptimizerCmaEsDeapCfg:
     type: str
     population_size: int
     sigma: float = 1.0
+    mu: int = 0
 
 
 class OptimizerCmaEsDeap(IOptimizer):
@@ -23,7 +24,11 @@ class OptimizerCmaEsDeap(IOptimizer):
         creator.create("FitnessMax", base.Fitness, weights=(1.0,))
         creator.create("Individual", list, typecode='b', fitness=creator.FitnessMax)
 
-        strategy = cma.Strategy(centroid=[0.0] * individual_size, sigma=config.sigma, lambda_=config.population_size)
+        mu = config.population_size / 2  # this is the default used upstream, if no kwarg mu is supplied
+        if config.mu > 0:
+            mu = config.mu
+        strategy = cma.Strategy(centroid=[0.0] * individual_size, sigma=config.sigma, lambda_=config.population_size,
+                                mu=mu)
 
         self.toolbox = base.Toolbox()
         self.toolbox.register("generate", strategy.generate, creator.Individual)
