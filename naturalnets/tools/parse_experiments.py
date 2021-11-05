@@ -59,13 +59,24 @@ def gather_info_for_csv(simulation):
 def parse_log(log):
     # Layout of Log.json is
     # ['gen', 'min', 'mean', 'max', 'best', 'elapsed time (s)\n']
-    mean = [log_entry["mean"] for log_entry in log]
-    maximum = [log_entry["max"] for log_entry in log]
-    best = [log_entry["best"] for log_entry in log]
-    generations = [i for i in range(len(log))]
+    mean = []
+    max = []
+    best = []
+    generations = [0]
+    for log_entry in log:
+        if "mean" not in log_entry:
+            continue
+        mean.append(log_entry["mean"])
+        max.append(log_entry["max"])
+        if "best_current" in log_entry:
+            best.append(log_entry["best_current"])
+        else:
+            best.append(log_entry["best"])
+        generations.append(generations[-1] + 1)
+    generations.pop()
     return {
         "generations": generations,
         "mean": mean,
-        "maximum": maximum,
+        "maximum": max,
         "best": best
     }

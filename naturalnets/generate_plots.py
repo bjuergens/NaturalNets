@@ -7,14 +7,14 @@ from naturalnets.tools.parse_experiments import read_simulations, parse_log
 
 logging.basicConfig(format="%(levelname)s: %(message)s", level=logging.INFO)
 
-simulations_directory = "Simulation_Results"
+simulations_directory = "results"
 save_svg: str = "plot.svg"  # A filename where the plot should be saved
 style: str = "seaborn-paper"  # Which plot style should be used?
-recreate_all_plots: bool = False
+recreate_all_plots: bool = True
 
 
 def plot_chapter(axis, parsed_log):
-    colors = ("green", "teal", "teal", 'blue')
+    colors = ("green", "teal", "blue", 'brown')
     generations = parsed_log["generations"]
     mean = parsed_log["mean"]
     maximum = parsed_log["maximum"]
