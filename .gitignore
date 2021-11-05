@@ -10,6 +10,14 @@ configurations/default.json
 configurations/temp.json
 configurations/Configuration.json
 configurations/local_*
+/naturalnets/configurations/Configuration.json
+/Configuration.json
+
+/naturalnets.egg-info/
+/.~lock.Simulation_Resultsa.ods#
+/Simulation_Resultsa.ods
+/Stop_Optimization.json
+
 
 checkpoints
 /results/
