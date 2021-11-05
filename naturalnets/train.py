@@ -116,7 +116,7 @@ def train(configuration, results_directory):
                                                 np.min(rewards_training),
                                                 np.mean(rewards_training),
                                                 np.max(rewards_training),
-                                                best_reward_overall,
+                                                best_reward_current_generation,
                                                 elapsed_time_current_generation))
 
         # Write current generation to log
@@ -126,6 +126,7 @@ def train(configuration, results_directory):
         log_line['mean'] = np.mean(rewards_training)
         log_line['max'] = np.max(rewards_training)
         log_line['best'] = best_reward_overall
+        log_line['best_current'] = best_reward_current_generation
         log_line['elapsed_time'] = elapsed_time_current_generation
         log.append(log_line)
 
